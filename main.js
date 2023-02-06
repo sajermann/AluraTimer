@@ -1,5 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
-const data = require('./data.js')
+const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
+const data = require("./data.js");
+const template = require("./template");
+
+let tray = null;
 
 app.on("ready", () => {
   console.log("Aplicacao iniciada");
@@ -8,6 +11,13 @@ app.on("ready", () => {
     width: 600,
     height: 400,
   });
+  tray = new Tray(`${__dirname}/app/img/icon-tray.png`);
+
+  let trayMenu = Menu.buildFromTemplate(template.geraTrayTemplate(mainWindow));
+
+  tray.setContextMenu(trayMenu);
+
+ 
 
   mainWindow.loadURL(`file://${__dirname}/app/index.html`);
 });
@@ -17,13 +27,13 @@ app.on("window-all-close", () => {
 });
 
 let aboutWindow = null;
-ipcMain.on("open-window-about", () => {
+ipcMain.on("abrir-janela-sobre", () => {
   if (aboutWindow) return;
   aboutWindow = new BrowserWindow({
     width: 300,
     height: 200,
     alwaysOnTop: true,
-    frame: false
+    frame: false,
   });
 
   aboutWindow.on("closed", () => {
@@ -31,17 +41,13 @@ ipcMain.on("open-window-about", () => {
   });
 
   aboutWindow.loadURL(`file://${__dirname}/app/about/index.html`);
-
-
 });
 
-ipcMain.on('close-window-about',()=>{
-  console.log('Fechando About...')
-  aboutWindow.close()
-})
+ipcMain.on("close-window-about", () => {
+  console.log("Fechando About...");
+  aboutWindow.close();
+});
 
-ipcMain.on('curso-parado',(event, curso, tempoEstudado)=>{
-  data.salvaDados(curso, tempoEstudado)
-
-
-})
+ipcMain.on("curso-parado", (event, curso, tempoEstudado) => {
+  data.salvaDados(curso, tempoEstudado);
+});

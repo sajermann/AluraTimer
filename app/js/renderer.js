@@ -36,3 +36,10 @@ botaoPlay.addEventListener("click", function () {
 
   botaoPlay.src = imgs[0];
 });
+
+ipcRenderer.on("curso-trocado", (_, cursoTemp) => {
+  data.pegaDados(cursoTemp).then((dados)=>{
+    tempo.textContent = dados.tempo
+  })
+  curso.textContent = cursoTemp;
+});

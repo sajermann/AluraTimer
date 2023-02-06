@@ -7,10 +7,10 @@ module.exports = {
     const exists = fs.existsSync(arquivoDoCurso);
     console.log(arquivoDoCurso, exists);
     if (exists) {
-      this.adicionaTempoAoCurso(arquivoDoCurso, tempoEstudado)
+      this.adicionaTempoAoCurso(arquivoDoCurso, tempoEstudado);
     } else {
       this.criaArquivoDeCurso(arquivoDoCurso, {}).then(() => {
-        this.adicionaTempoAoCurso(arquivoDoCurso, tempoEstudado)
+        this.adicionaTempoAoCurso(arquivoDoCurso, tempoEstudado);
       });
     }
   },
@@ -19,9 +19,12 @@ module.exports = {
       ultimoEstudo: new Date().toString(),
       tempo: tempoDeEstudo,
     };
-    jsonfile.writeFile(arquivoDoCurso, dados, {spaces: 2}).then(()=>{
-      console.log('Tempo Salvo com Sucesso!')
-    }).catch((err)=>console.error(err));
+    jsonfile
+      .writeFile(arquivoDoCurso, dados, { spaces: 2 })
+      .then(() => {
+        console.log("Tempo Salvo com Sucesso!");
+      })
+      .catch((err) => console.error(err));
   },
 
   criaArquivoDeCurso(nomeArquivo, conteudoArquivo) {
@@ -31,8 +34,13 @@ module.exports = {
       .catch((err) => console.error(err));
   },
 
-  pegaDados(nomeCurso){
+  pegaDados(nomeCurso) {
     let arquivoDoCurso = `${__dirname}/data/${nomeCurso}.json`;
     return jsonfile.readFile(arquivoDoCurso);
-  }
+  },
+  pegaNomeDosCursos() {
+    return fs
+      .readdirSync(`${__dirname}/data/`)
+      .map((item) => item.replace(".json", ""));
+  },
 };
